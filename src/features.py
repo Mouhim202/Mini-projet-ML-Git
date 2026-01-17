@@ -1,12 +1,13 @@
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import FunctionTransformer, StandardScaler
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import FunctionTransformer
-import numpy as np
 
-def clipper(X):
-    return np.clip(X, -2, 2)
+def _clip(X):
+    return X.clip(-3, 3)
 
 def build_numeric_preprocess():
     return Pipeline(steps=[
-        ("scaler", StandardScaler())
+        ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler()),
+        ("clip", FunctionTransformer(_clip)),  
     ])
